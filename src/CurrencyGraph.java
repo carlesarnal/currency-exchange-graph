@@ -42,6 +42,7 @@ public class CurrencyGraph {
 
 	 /**
 	  * Method to verify whether u and v are neighbors
+	  *
 	  * @param u
 	  * @param v
 	  * @return
@@ -55,6 +56,7 @@ public class CurrencyGraph {
 
 	 /**
 	  * Method to return the size of the graph
+	  *
 	  * @return
 	  */
 	 public int size() {
@@ -62,10 +64,8 @@ public class CurrencyGraph {
 	 }
 
 	 /**
-	  *
 	  * @param u
-	  * @return
-	  * To return the outgoing edges for the given source
+	  * @return To return the outgoing edges for the given source
 	  */
 	 public ArrayList<Integer> getOutEdges(int u) {
 		  return adjacencyList[u];
@@ -73,6 +73,7 @@ public class CurrencyGraph {
 
 	 /**
 	  * Method to return the adjacency list
+	  *
 	  * @return
 	  */
 	 public ArrayList<Integer>[] getAdjacencyList() {
@@ -162,14 +163,15 @@ public class CurrencyGraph {
 
 		  ArrayList<Integer> shortestPathList =
 				  BFSShortestPath.doBFSShortestPath(graph, Currency.EUR.getId(), Currency.CAD.getId());
+		  if (shortestPathList != null) {
+				Collections.reverse(shortestPathList);
 
-		  Collections.reverse(shortestPathList);
-
-		  System.out.print("[ ");
-		  for (int node : shortestPathList) {
-				System.out.print(Currency.fromId(node) + " " + node + " ");
+				System.out.print("[ ");
+				for (int node : shortestPathList) {
+					 System.out.print(Currency.fromId(node) + " " + node + " ");
+				}
+				System.out.print("]");
 		  }
-		  System.out.print("]");
 
 	 }
 }
