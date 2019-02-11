@@ -1,66 +1,91 @@
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.NoSuchElementException;
 
 public class CurrencyGraph {
 
+	 public static ArrayList<Integer>[] adjacencyList = null;
+	 public int noOfVertices;
 
-	 public static HashMap<Currency, HashSet<Currency>> adjacencyMap = null;
-
-	 public CurrencyGraph(List<Currency> currencies) {
-		  adjacencyMap = new HashMap<>();
-		  for (Currency currency : currencies)
-				adjacencyMap.put(currency, new HashSet<>());
+	 public CurrencyGraph(int noOfVertices) {
+		  adjacencyList = (ArrayList<Integer>[]) new ArrayList[noOfVertices + 1];
+		  this.noOfVertices = noOfVertices;
+		  for (int i = 0; i < (noOfVertices + 1); i++)
+				adjacencyList[i] = new ArrayList<Integer>();
 	 }
 
-	 public void addEdge(Edge edge) {
-		  adjacencyMap.get(edge.getOrigin()).add(edge.getDestination());
+	 /**
+	  * @param u
+	  * @param v To add edges to the adjacency list in graph
+	  */
+	 public void addEdge(int u, int v) {
+		  if (adjacencyList[u] == null)
+				adjacencyList[u] = new ArrayList<Integer>();
+		  adjacencyList[u].add(v);
+	 }
+
+	 /**
+	  * @param u
+	  * @param v To remove the edge from the graph
+	  */
+	 public void removeEdge(int u, int v) {
+		  int indexToBeRemoved = -1;
+		  ArrayList<Integer> edgeList = adjacencyList[u];
+		  for (int i = 0; i < adjacencyList[u].size(); i++) {
+				int val = edgeList.get(i);
+				if (val == v) {
+					 indexToBeRemoved = i;
+				}
+		  }
+		  edgeList.remove(indexToBeRemoved);
 	 }
 
 	 /**
 	  * Method to verify whether u and v are neighbors
-	  *
 	  * @param u
 	  * @param v
 	  * @return
 	  */
-	 public boolean isNeighbor(Currency u, Currency v) {
-		  return adjacencyMap.get(u).contains(v);
+	 public boolean isNeighbor(int u, int v) {
+		  if (adjacencyList[u] == null)
+				return false;
+		  return adjacencyList[u].contains(v);
 
 	 }
 
 	 /**
 	  * Method to return the size of the graph
-	  *
 	  * @return
 	  */
 	 public int size() {
-		  return adjacencyMap.size();
+		  return adjacencyList.length;
 	 }
 
 	 /**
-	  * @param currency
-	  * @return To return the outgoing edges for the given currency
+	  *
+	  * @param u
+	  * @return
+	  * To return the outgoing edges for the given source
 	  */
-	 public HashSet<Currency> getOutEdges(Currency currency) {
-		  return adjacencyMap.get(currency);
+	 public ArrayList<Integer> getOutEdges(int u) {
+		  return adjacencyList[u];
 	 }
 
 	 /**
 	  * Method to return the adjacency list
-	  *
 	  * @return
 	  */
-	 public HashMap getAdjacencyMap() {
-		  return adjacencyMap;
+	 public ArrayList<Integer>[] getAdjacencyList() {
+		  return adjacencyList;
 	 }
 
 	 public void printGraph() {
-		  HashSet<Currency> edgeList;
-		  for (Currency currency : adjacencyMap.keySet()) {
-				edgeList = adjacencyMap.get(currency);
+		  ArrayList<Integer> edgeList;
+		  for (int i = 1; i <= noOfVertices; i++) {
+				edgeList = adjacencyList[i];
 				if (edgeList != null) {
-					 for (Currency v : edgeList)
-						  System.out.println(
-								  " u : " + currency + " " + " v : " + v);
+					 for (int v : edgeList)
+						  System.out.println("u : " + i + " v : " + v);
 				}
 		  }
 	 }
@@ -68,9 +93,9 @@ public class CurrencyGraph {
 
 
 	 public enum Currency {
-		  USD(1),
+		  EUR(1),
 		  CAD(2),
-		  EUR(3);
+		  USD(3);
 
 		  Currency(int id) {
 				this.id = id;
@@ -85,11 +110,11 @@ public class CurrencyGraph {
 		  public static Currency fromId(int id) {
 				switch (id) {
 					 case 1:
-						  return USD;
+						  return EUR;
 					 case 2:
 						  return CAD;
 					 case 3:
-						  return EUR;
+						  return USD;
 					 default:
 						  throw new NoSuchElementException();
 				}
@@ -98,12 +123,18 @@ public class CurrencyGraph {
 
 
 	 private static class Edge {
+		  private final double conversionRate;
 		  private final Currency origin;
 		  private final Currency destination;
 
 		  public Edge(double conversionRate, Currency origin, Currency destination) {
+				this.conversionRate = conversionRate;
 				this.origin = origin;
 				this.destination = destination;
+		  }
+
+		  public double getConversionRate() {
+				return conversionRate;
 		  }
 
 		  public Currency getOrigin() {
@@ -120,23 +151,23 @@ public class CurrencyGraph {
 	  */
 	 public static void main(String[] args) {
 
-		  CurrencyGraph graph = new CurrencyGraph(Arrays.asList(Currency.values()));
+		  CurrencyGraph graph = new CurrencyGraph(Currency.values().length);
 
-		  graph.addEdge(new Edge(3.45, Currency.EUR, Currency.USD));
-		  graph.addEdge(new Edge(1.98, Currency.CAD, Currency.EUR));
-		  graph.addEdge(new Edge(0.58, Currency.USD, Currency.EUR));
-		  graph.addEdge(new Edge(0.28, Currency.EUR, Currency.CAD));
+		  graph.addEdge(Currency.EUR.getId(), Currency.USD.getId());
+		  graph.addEdge(Currency.CAD.getId(), Currency.EUR.getId());
+		  graph.addEdge(Currency.USD.getId(), Currency.EUR.getId());
+		  graph.addEdge(Currency.EUR.getId(), Currency.CAD.getId());
 
 		  graph.printGraph();
 
-		  ArrayList<Currency> shortestPathList =
-				  BFSShortestPath.doBFSShortestPath(graph, Currency.USD, Currency.CAD);
+		  ArrayList<Integer> shortestPathList =
+				  BFSShortestPath.doBFSShortestPath(graph, Currency.EUR.getId(), Currency.CAD.getId());
 
 		  Collections.reverse(shortestPathList);
 
 		  System.out.print("[ ");
-		  for (Currency node : shortestPathList) {
-				System.out.print(node + " ");
+		  for (int node : shortestPathList) {
+				System.out.print(Currency.fromId(node) + " " + node + " ");
 		  }
 		  System.out.print("]");
 

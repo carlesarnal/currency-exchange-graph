@@ -2,27 +2,24 @@ import java.util.*;
 
 public class BFSShortestPath {
 
-	 public static ArrayList<CurrencyGraph.Currency> doBFSShortestPath(CurrencyGraph graph,
-			 CurrencyGraph.Currency source, CurrencyGraph.Currency dest) {
-		  ArrayList<CurrencyGraph.Currency> shortestPathList =
-				  new ArrayList<CurrencyGraph.Currency>();
-		  HashMap<CurrencyGraph.Currency, Boolean> visited =
-				  new HashMap<CurrencyGraph.Currency, Boolean>();
+	 public static ArrayList<Integer> doBFSShortestPath(CurrencyGraph graph, int source, int dest) {
+		  ArrayList<Integer> shortestPathList = new ArrayList<Integer>();
+		  HashMap<Integer, Boolean> visited = new HashMap<Integer, Boolean>();
 
 		  if (source == dest)
 				return null;
-		  Queue<CurrencyGraph.Currency> queue = new LinkedList<CurrencyGraph.Currency>();
-		  Stack<CurrencyGraph.Currency> pathStack = new Stack<CurrencyGraph.Currency>();
+		  Queue<Integer> queue = new LinkedList<Integer>();
+		  Stack<Integer> pathStack = new Stack<Integer>();
 
 		  queue.add(source);
 		  pathStack.add(source);
 		  visited.put(source, true);
 
 		  while (!queue.isEmpty()) {
-				CurrencyGraph.Currency u = queue.poll();
-				HashSet<CurrencyGraph.Currency> adjList = graph.getOutEdges(u);
+				int u = queue.poll();
+				ArrayList<Integer> adjList = graph.getOutEdges(u);
 
-				for (CurrencyGraph.Currency v : adjList) {
+				for (int v : adjList) {
 					 if (!visited.containsKey(v)) {
 						  queue.add(v);
 						  visited.put(v, true);
@@ -33,8 +30,9 @@ public class BFSShortestPath {
 				}
 		  }
 
+
 		  //To find the path
-		  CurrencyGraph.Currency node, currentSrc = dest;
+		  int node, currentSrc = dest;
 		  shortestPathList.add(dest);
 		  while (!pathStack.isEmpty()) {
 				node = pathStack.pop();
