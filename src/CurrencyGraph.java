@@ -8,6 +8,8 @@ public class CurrencyGraph {
 	 public int noOfVertices;
 
 	 public CurrencyGraph(int noOfVertices) {
+
+		  System.out.println("testing...");
 		  adjacencyList = (ArrayList<Integer>[]) new ArrayList[noOfVertices + 1];
 		  this.noOfVertices = noOfVertices;
 		  for (int i = 0; i < (noOfVertices + 1); i++)
@@ -94,9 +96,7 @@ public class CurrencyGraph {
 
 
 	 public enum Currency {
-		  EUR(1),
-		  CAD(2),
-		  USD(3);
+		  EUR(1), CAD(2), USD(3);
 
 		  Currency(int id) {
 				this.id = id;
