@@ -3,6 +3,8 @@ import java.util.*;
 public class BFSShortestPath {
 
 	 public static ArrayList<Integer> doBFSShortestPath(CurrencyGraph graph, int source, int dest) {
+
+		  System.out.println("Testing...");
 		  ArrayList<Integer> shortestPathList = new ArrayList<Integer>();
 		  HashMap<Integer, Boolean> visited = new HashMap<Integer, Boolean>();
 
